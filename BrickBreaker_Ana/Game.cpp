@@ -116,7 +116,16 @@ void Game::movePaddle(int x, int y) {
 }
 
 void Game::update() {
+	xPos2 += xSpeed;	//update x-position along with x-speed
+	yPos2 += ySpeed;	//update y-position along with y-speed
 
+	//Ball bouncing:
+	if (xPos2 < 0 || xPos2 + width > 600) {	//if the ball hit left or right edge of window
+		xSpeed = -xSpeed;
+	}
+	if (yPos2 < 0 || yPos2 + height > 355) { //if the ball hit top or bottom edge of the window (from the paddle)
+		ySpeed = -ySpeed;
+	}
 }
 
 void Game::clean() {
