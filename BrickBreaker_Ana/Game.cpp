@@ -121,7 +121,7 @@ void Game::update() {
 
 	//Ball bouncing:
 	if (xPos2 < 0 || xPos2 + width > 600) {	//if the ball hit left or right edge of window
-		xSpeed = -xSpeed;
+		xSpeed = -xSpeed; //reverse the direction of the ball
 	}
 	if (yPos2 < 0 || yPos2 + height > 355) { //if the ball hit top or bottom edge of the window (from the paddle)
 		ySpeed = -ySpeed;
