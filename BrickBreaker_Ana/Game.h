@@ -32,7 +32,7 @@ private:
 	int yPos2 = 320; //y-position of ball
 	const int width = 20; //ball width
 	const int height = 20; //ball height
-	float xSpeed = 0.1f; //velocity of the ball by x-position
-	float ySpeed = 0.1f; //velocity of the ball by y-position
+	int xSpeed = 1; //velocity of the ball by x-position
+	int ySpeed = 1; //velocity of the ball by y-position
 };
 
