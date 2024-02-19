@@ -97,7 +97,7 @@ void Game::handleEvents() {
 				break;
 			case SDLK_RIGHT:
 				if (xPos == 465) {
-					stopMoving = false;
+					stopMoving = false;	//stop moving paddle when x-position of paddle reaches 465 (to the right wall)
 				}
 				else {
 					xPos += 5; //right moving
