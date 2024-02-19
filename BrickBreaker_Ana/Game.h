@@ -20,12 +20,19 @@ private:
 	SDL_Renderer* renderer = NULL;
 	SDL_Texture* texture = NULL;
 	bool running;
-	bool startButton = false;	//is the start button clicked
 	int currentFrame;
+	//Start button:
+	bool startButton = false;	//is the start button clicked
+	//Paddle:
 	int xPos = 225; //x-position of paddle
 	int yPos = 330; //y-position of paddle
 	bool stopMoving = true; //paddle has to stop moving when it gets to the walls
+	//Ball:
 	int xPos2 = 275; //x-position of ball
 	int yPos2 = 320; //y-position of ball
+	const int width = 20; //ball width
+	const int height = 20; //ball height
+	float xSpeed = 0.1f; //velocity of the ball by x-position
+	float ySpeed = 0.1f; //velocity of the ball by y-position
 };
 
