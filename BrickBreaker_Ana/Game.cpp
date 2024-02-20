@@ -116,6 +116,8 @@ void Game::movePaddle(int x, int y) {
 }
 
 void Game::update() {
+	int lives = 2;
+
 	double xSpeedC = 0.055; //decrease velocity of ball
 	double ySpeedC = 0.055;
 
@@ -123,17 +125,28 @@ void Game::update() {
 	yPos2 += ySpeed * ySpeedC; //update y-position along with y-speed
 
 	//Ball bouncing:
-	if (xPos2 < 0 || xPos2 + width > 575 || xPos2 < 25) { //if the ball hits left or right edge of window
+	if (xPos2 < 25 || xPos2 + width >= 575) { //if the ball hits left or right edge of window
 		xSpeed = -xSpeed; //reverse direction horizontally
 	}
-	if (yPos2 < 0 || yPos2 + height > 355) { //if the ball hits top or bottom edge of the window (from the paddle)
-		ySpeed = -ySpeed; //reverse direktion vertically
+	if (yPos2 < 0 || yPos2 + height >= 350) { //if the ball hits top of the window or bottom edge of the paddle)
+		ySpeed = -ySpeed; //reverse direction vertically
 	}
 
 	//Ball touches the paddle:
-	if (yPos2 + height >= yPos) { //if the bottom of the ball is touching the top of the paddle 
-		ySpeed = -ySpeed; //reverse speed vertically (it has to continue bouncing)
-		yPos2 = yPos - height; //ensure that the ball is touching the top edge of the paddle
+	SDL_Rect paddleS = { 225, 330, 120, 30 }; //x, y coordinates and size of the paddle
+	if (yPos2 + height >= paddleS.y && xPos2 > xPos && xPos2 > xPos + width) {
+	//if bottom edge of the ball touches top edge of the paddle; left -//- and right -//-
+		ySpeed = -ySpeed;
+		yPos2 = paddleS.y - height; //collision detection between the ball and the paddle
+	}
+
+	//Reset ball position to the initially position if it falls off the bottom
+	if (yPos2 + height >= 350) { //ball falls
+		xPos2 = xPos + 50; 
+		yPos2 = yPos;
+		xSpeed = 0;
+		ySpeed = 0;
+		lives -= 1;
 	}
 }
 
