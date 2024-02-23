@@ -8,7 +8,7 @@ class Bricks
 public: 
 	Bricks();
 
-	void loadBricks();
+	void loadBricksPositions();
     
 	void drawBricks(SDL_Renderer* renderer);
 
