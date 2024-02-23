@@ -12,6 +12,11 @@ bool Ball::checkCollision(double x, double y, int w, int h)
         ballYSpeed = -ballYSpeed;
 		return true;
     }
+    if (ballYPos > 340) {
+        ballXPos = 275; //restart ball position
+        ballYPos = 330;
+        lives--;
+    }
 	return false;
 }
 
