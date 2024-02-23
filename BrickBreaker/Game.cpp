@@ -36,13 +36,6 @@ bool Game::init(const char* title, int xpos, int ypos, int width, int height, in
 
 				//load brick positions:
 				bricks->loadBricksPositions();
-
-				TTF_Init();
-				font = TTF_OpenFont("text/Arcade.ttf", 35);
-				if (font) {
-					std::cout << "Font loaded\n";
-				}
-				lives = 2;
 			}
 
 			else {
@@ -86,29 +79,11 @@ void Game::render() {
 		//draw bricks:
 		bricks->drawBricks(renderer);
 
-		//draw text for number lives:
-		SDL_Color textColor = { 255, 255, 0 };
-		std::string livesText = "x" + std::to_string(lives);
-		SDL_Surface* surface = TTF_RenderText_Solid(font, livesText.c_str(), textColor);
-		SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+		SDL_RenderCopy(renderer, textTextureFont1, NULL, &dRectFont1);
 
-		//Set the position of the rendered text
-		SDL_Rect rect;
-		rect.x = 530; // X position
-		rect.y = 8; // Y position
-		rect.w = surface->w; // Width of the text surface
-		rect.h = surface->h; // Height of the text surface
-
-		if (ball.getBallYPos() > paddle.getPaddleYPos()) {
-			lives = 1;
+		if (ball.getLives() == 0) {
+			TextureManager::Instance()->drawTexture("gameOver", 0, 0, ww, wh, renderer); //lives
 		}
-
-		//if (lives == 0) {
-		//	TextureManager::Instance()->drawTexture("gameOver", 0, 0, ww, wh, renderer); // Game over texture
-		//}
-	
-
-		SDL_RenderCopy(renderer, texture, NULL, &rect);
 	}
 
 	SDL_RenderPresent(renderer);
@@ -126,8 +101,8 @@ void Game::handleEvents() {
 			int mouseY;
 			SDL_GetMouseState(&mouseX, &mouseY);
 			if (startButton == true) {	//ball start bouncing if user click on the screen if start button is clicked
-				ball.setBallYSpeed(0.15);
-				ball.setBallXSpeed(0.15);
+				ball.setBallYSpeed(0.25);
+				ball.setBallXSpeed(0.25);
 			}
 			else
 			{
@@ -166,6 +141,32 @@ void Game::movePaddle(int x, int y)
 {
 	paddle.setPaddleXPos(paddle.getPaddleXPos() + x);
 	paddle.setPaddleYPos(paddle.getPaddleXPos() + y);
+}
+
+bool Game::ttf_init()
+{
+	if (TTF_Init() == -1) {
+		return false;
+	}
+	TTF_Font* font1 = TTF_OpenFont("text/Arcade.ttf", 35);
+
+	if (font1 == NULL) {
+		return false;
+	}
+
+	SDL_Surface* tempLivesText = NULL;
+
+	tempLivesText = TTF_RenderText_Blended(font1, to_string(ball.getLives()).c_str(), { 255,255,255,255 });
+	//tempSurfaceText = TTF_RenderText_Blended(font1, "x", { 255,255,255,255 });
+
+	textTextureFont1 = SDL_CreateTextureFromSurface(renderer, tempLivesText);
+
+	int tw, th, tt, ww;
+	SDL_QueryTexture(textTextureFont1, 0, 0, &tw, &th);
+	dRectFont1 = { 530, 8, tw, th };
+
+	SDL_FreeSurface(tempLivesText);
+	TTF_CloseFont(font1);
 }
 
 void Game::update() {
