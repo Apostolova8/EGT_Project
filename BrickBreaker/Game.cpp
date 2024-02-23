@@ -86,7 +86,8 @@ void Game::render() {
 		//draw bricks:
 		bricks->drawBricks(renderer);
 
-		SDL_Color textColor = { 255, 255, 255 }; // White color
+		//draw text for number lives:
+		SDL_Color textColor = { 255, 255, 0 };
 		std::string livesText = "x" + std::to_string(lives);
 		SDL_Surface* surface = TTF_RenderText_Solid(font, livesText.c_str(), textColor);
 		SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
@@ -98,9 +99,16 @@ void Game::render() {
 		rect.w = surface->w; // Width of the text surface
 		rect.h = surface->h; // Height of the text surface
 
+		if (ball.getBallYPos() > paddle.getPaddleYPos()) {
+			lives = 1;
+		}
+
+		//if (lives == 0) {
+		//	TextureManager::Instance()->drawTexture("gameOver", 0, 0, ww, wh, renderer); // Game over texture
+		//}
+	
+
 		SDL_RenderCopy(renderer, texture, NULL, &rect);
-		//SDL_FreeSurface(surface);
-		//SDL_DestroyTexture(texture);
 	}
 
 	SDL_RenderPresent(renderer);
@@ -118,8 +126,8 @@ void Game::handleEvents() {
 			int mouseY;
 			SDL_GetMouseState(&mouseX, &mouseY);
 			if (startButton == true) {	//ball start bouncing if user click on the screen if start button is clicked
-				ball.setBallXSpeed(0.25);
-				ball.setBallYSpeed(0.25);
+				ball.setBallYSpeed(0.15);
+				ball.setBallXSpeed(0.15);
 			}
 			else
 			{
@@ -165,11 +173,11 @@ void Game::update() {
 	//update ball position with speed:
 	ball.ballSpeed();	
 
-	//ball collision with walls:
-	ball.collissionWalls();
-
 	//ball collision with paddle:
 	ball.checkCollision(paddle.getPaddleXPos(),paddle.getPaddleYPos(), paddle.getPaddleWidth(), paddle.getPaddleHeight());
+
+	//ball collision with walls:
+	ball.collissionWalls();
 
 	//ball collision with bricks:
 	bricks->checkCollision(ball.getBallXPos(), ball.getBallYPos(), ball.getBallWidth(), ball.getBallHeight());
@@ -190,7 +198,6 @@ Game::Game() {
 	Game::window = NULL;
 	Game::renderer = NULL;
 	Game::running = true;
-	Game::currentFrame = 4;
 }
 
 Game::~Game()
