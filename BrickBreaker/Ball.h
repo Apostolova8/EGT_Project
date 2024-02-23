@@ -44,6 +44,6 @@ private:
 	int ballHeight = 20; //ball height
     double ballXSpeed = 0; //velocity of the ball
 	double ballYSpeed = 0;
-
+	 int lives = 2;
 };
 
