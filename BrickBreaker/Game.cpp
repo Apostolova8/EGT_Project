@@ -79,7 +79,7 @@ void Game::render() {
 		TextureManager::Instance()->drawTexture("paddle", paddleXPos, paddleYPos, paddleWidth, paddleHeight, renderer); //paddle
 		TextureManager::Instance()->drawTexture("wall", leftWallXPos, leftWallYPos, leftWallWidth, leftWallHeight, renderer); //left wall
 		TextureManager::Instance()->drawTexture("wall", rightWallXPos, rightWallYPos, rightWallWidth, rightWallHeight, renderer); //right wall
-		TextureManager::Instance()->drawTexture("ball", ballXPos, ballYPos, ballWidth, ballHeight, renderer); //ball
+		TextureManager::Instance()->drawTexture("ball", ball.getBallXPos(), ball.getBallYPos(), ball.getBallWidth(), ball.getBallHeight(), renderer); //ball
 
 		//draw bricks:
 		for (int i = 0; i < brickPos.size(); i++) { //iterate over the elements in vector
@@ -104,27 +104,28 @@ void Game::handleEvents() {
 			int mouseX;
 			int mouseY;
 			SDL_GetMouseState(&mouseX, &mouseY);
-			paddleXPos = mouseX - paddleWidth / 2;
-			if (mouseX > 150 && mouseX < 450 && mouseY > 150 && mouseY < 270) {
-				// Check if the mouse click is on the start button
-				startButton = true;
+			if (startButton == true) {
+				ball.setBallXSpeed(1);
+				ball.setBallYSpeed(1);
+			}
+			else
+			{
+				//paddleXPos = mouseX - paddleWidth / 2;
+				if (mouseX > 150 && mouseX < 450 && mouseY > 150 && mouseY < 270) {
+					// Check if the mouse click is on the start button
+					startButton = true;
+				}
 			}
 			break;
 		case SDL_KEYDOWN:	//move paddle
 			switch (event.key.keysym.sym) {
 			case SDLK_LEFT:
-				if (paddleXPos == 15) {
-					stopMoving = false;	//stop moving paddle when x-position of paddle reaches 15 (to the left wall)
-				}
-				else {
+				if (paddleXPos > 25) {
 					paddleXPos -= 15; //left moving
 				}
 				break;
 			case SDLK_RIGHT:
-				if (paddleXPos == 465) {
-					stopMoving = false;	//stop moving paddle when x-position of paddle reaches 465 (to the right wall)
-				}
-				else {
+				if (paddleXPos + paddleWidth  < 575) {
 					paddleXPos += 15; //right moving
 				}
 				break;
@@ -141,51 +142,37 @@ void Game::movePaddle(int x, int y)
 	paddleYPos += y;
 }
 
+//bool Game::checkCollision(int ballX, int ballY, int ballW, int ballH, int x, int y, int w, int h)
+//{
+//	if (ballY + ballH > y && ballX + ballW > x && ballX < x + w && ballY < y + h) {
+//		return true;
+//	}
+//	
+//	return false;
+//}
+
 void Game::update() {
 
-	ballXPos += ballXSpeed;
-	ballYPos += ballYSpeed;
+	ball.ballSpeed();
 
 	//cout << "Ball X Position: " << ballXPos << endl;
 	//cout << "Ball Y Position: " << ballYPos << endl;
 
 	//collision with walls
-	if (ballXPos < 25 || ballXPos + ballWidth >= 575) { //if the ball hits left or right edge of walls
-		ballXSpeed = -ballXSpeed; //reverse direction horizontally
-	}
-	cout << "ball hits left/right wall" << endl;
-	if (ballYPos < 0 || ballYPos + ballHeight >= 330) { //if the ball hits top of the window 
-		ballYSpeed = -ballYSpeed; //reverse direction vertically
-	}
-	cout << "ball hits top of the screen" << endl;
+	ball.collissionWalls();
 
 	//collision with paddle
-	if (ballYPos + ballHeight > paddleYPos) { //if bottom edge of the ball touches top edge of the paddle
-		ballYPos = -ballYSpeed;
-		//ballYPos = paddleYPos - ballHeight; //collision detection between the ball and the paddle
-		cout << "ball touched paddle" << endl;
-	}
-
-	//ball falls
-	if (ballYPos > 400) {
-		ballXPos = 275; // Reset to starting X position
-		ballYPos = 330; // Reset to starting Y position
-		ballXSpeed = 0.5; // Reset X speed
-		ballYSpeed = 0.5; // Reset Y speed
-		cout << "ball fell off the screen" << endl;
-	}
 
 	//collision with bricks
+	ball.checkCollision(paddleXPos, paddleYPos, paddleWidth, paddleHeight);
 	for (int i = 0; i < brickPos.size(); i++) {	//every brick in vector
-		if (brickV[i] && ballXPos + ballWidth > brickPos[i].x &&	//right edge of the ball is to the left edge of the brick
-			ballXPos < brickPos[i].x + brickPos[i].w &&				//left edge of the ball is to the right edge of the brick
-			ballYPos + ballHeight > brickPos[i].y &&				//bottom edge of the ball is below the top edge of the brick
-			ballYPos < brickPos[i].y + brickPos[i].h) {				//top edge of the ball is above the bottom edge of the brick
-
-			brickV[i] = false;	//hide the brick, because it was hit by ball
-
-			ballYSpeed = -ballYSpeed;	//reverse speed
-			cout << "ball hit brick" << endl;
+		if (brickV[i])
+		{
+			if (ball.checkCollision(brickPos[i].x, brickPos[i].y, brickPos[i].w, brickPos[i].h))
+			{
+				brickV[i] = false;	//hide the brick, because it was hit by ball
+				cout << "ball hit brick" << endl;
+			}
 		}
 	}
 }
