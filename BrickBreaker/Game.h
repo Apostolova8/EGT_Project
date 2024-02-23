@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include <iostream>
 #include <vector>
+#include "Ball.h"
 
 class Game
 {
@@ -25,14 +26,15 @@ private:
 
 	bool startButton = false; //is the start button clicked
 
-	bool stopMoving = true;	//stop moving paddle next to the wall
+	//bool checkCollision(int ballX, int ballY, int ballW, int ballH, int x, int y, int w, int h);
 
-	int ballXPos = 275; //x-position of ball (left edge)
-	int ballYPos = 330; //y-position of ball (top edge)
-	int ballWidth = 20; //ball width
-	int ballHeight = 20; //ball height
-	int ballXSpeed = 1; //velocity of the ball
-	int ballYSpeed = -1;
+	//
+	//int ballXPos = 275; //x-position of ball (left edge)
+	//int ballYPos = 330; //y-position of ball (top edge)
+	//int ballWidth = 20; //ball width
+	//int ballHeight = 20; //ball height
+	//int ballXSpeed = 1; //velocity of the ball
+	//int ballYSpeed = 1;
 
 	int paddleXPos = 225; //x-position of paddle (left edge)
 	int paddleYPos = 340; //y-position of paddle (top edge)
@@ -58,6 +60,8 @@ private:
 	bool brickV[10]; //which brick is visible
 	int brickHeight = 50;
 	int brickWidth = 50; 
+
+	Ball ball;
 
 	int lives = 2;
 };
