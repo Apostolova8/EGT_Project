@@ -32,7 +32,7 @@ bool Game::init(const char* title, int xpos, int ypos, int width, int height, in
 				TextureManager::Instance()->loadTexture("images/brickY.jpg", "brickY", renderer);
 
 				//load brick positions:
-				bricks->loadBricks();
+				bricks->loadBricksPositions();
 			}
 
 			else {
