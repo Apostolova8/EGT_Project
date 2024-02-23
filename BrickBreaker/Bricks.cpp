@@ -9,7 +9,7 @@ Bricks::Bricks()
 {
 }
 
-void Bricks::loadBricks() {
+void Bricks::loadBricksPositions() {
 
     for (int i = 0; i < 5; i++) { //create 5 bricks
         SDL_Rect brickRect = { 50 + i * 100, 50, brickWidth, brickHeight }; //first brick x pos, spacing, x-pos of whole row
@@ -25,10 +25,16 @@ void Bricks::loadBricks() {
 }
 
 void Bricks::drawBricks(SDL_Renderer* renderer) {
-    for (int i = 0; i < brickPos.size(); i++) { // iterate over the elements in vector
+    for (int i = 0; i < 5; i++) { // iterate over the elements in vector
         if (brickV[i]) { // if the brick is visible (brickV = true)
             SDL_Rect brickRect = brickPos[i]; // create rect which contains the brick "elements"
             TextureManager::Instance()->drawTexture("brickY", brickRect.x, brickRect.y, brickRect.w, brickRect.h, renderer);
+        }
+    }
+    for (int i = 5; i < 10; i++) { // iterate over the elements in vector
+        if (brickV[i]) { // if the brick is visible (brickV = true)
+            SDL_Rect brickRect = brickPos[i]; // create rect which contains the brick "elements"
+            TextureManager::Instance()->drawTexture("brickG", brickRect.x, brickRect.y, brickRect.w, brickRect.h, renderer);
         }
     }
 }
