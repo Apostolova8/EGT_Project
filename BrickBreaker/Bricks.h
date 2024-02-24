@@ -22,9 +22,12 @@ public:
 
 	void setBrickWidth(int brickWidth);
 
+	int getPoints();
+
 private:
 	int brickHeight = 50;
 	int brickWidth = 50;
+	int points = 0;
 
 	struct Brick {	//make a struct to store visibility and hitting count of bricks
 		SDL_Rect rect;	//rect for drawing
