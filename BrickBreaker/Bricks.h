@@ -12,7 +12,7 @@ public:
     
 	void drawBricks(SDL_Renderer* renderer);
 
-    bool checkCollision(double x, double y, int w, int h);
+    bool checkCollision(double x, double y, double& ys, double& xs, int w, int h);
 
 	int getBrickHeight() const;
 
@@ -31,8 +31,8 @@ private:
 
 	struct Brick {	//make a struct to store visibility and hitting count of bricks
 		SDL_Rect rect;	//rect for drawing
-		bool isVisible;	//bool for visability
-		int hitCount;	//int for track hit count of different types of bricks
+		bool isVisible;	//bool for visibility
+		int hitCount = 0;	//int for track hit count of different types of bricks
 
 		Brick(SDL_Rect rect, bool isVisible, int hitCount) : rect(rect), isVisible(isVisible), hitCount(hitCount) {}
 	};
