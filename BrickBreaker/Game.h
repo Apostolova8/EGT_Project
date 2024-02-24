@@ -41,6 +41,9 @@ private:
 	//game over:
 	SDL_Texture* textTextureFont3;
 	SDL_Rect dRectFont3;
+	//restart:
+	SDL_Texture* textTextureFont4;
+	SDL_Rect dRectFont4;
 
 	bool running;
 
