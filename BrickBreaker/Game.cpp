@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include "SDL_image.h"
 #include "Bricks.h"
+#include "Ball.h"
 #include "Screen.h"
 
 using namespace std;
@@ -71,7 +72,7 @@ void Game::render() {
 
 	//switch in game process:
 	switch (gameState) {
-	case START:	//case start -> see start buton
+	case START:	//case start -> see start button
 		TextureManager::Instance()->drawTexture("startButton", 150, 150, 300, 120, renderer);	//start button
 		break;
 	case PLAY:	//case play -> render all textures by their objects, after clicked start button
@@ -90,6 +91,10 @@ void Game::render() {
 			SDL_RenderCopy(renderer, textTextureFont4, NULL, &dRectFont4);
 			ball.setBallXSpeed(0);
 			ball.setBallYSpeed(0);
+			bricks->loadBricksPositions();
+			paddle.getPaddleXPos();
+			paddle.getPaddleYPos();
+			
 			//running = false;
 		}
 		break;
@@ -111,8 +116,8 @@ void Game::handleEvents() {
 			SDL_GetMouseState(&mouseX, &mouseY);
 			if (startButton == true) {	//ball start bouncing if user click on the screen if start button is clicked
 				gameState = PLAY;
-				ball.setBallYSpeed(0.9);
-				ball.setBallXSpeed(0.9);
+				ball.setBallYSpeed(0.5);
+				ball.setBallXSpeed(0.5);
 			}
 			else
 			{
@@ -240,8 +245,16 @@ void Game::update() {
 	//ball collision with walls:
 	ball.collissionWalls();
 
-	//ball collision with bricks:
-	bricks->checkCollision(ball.getBallXPos(), ball.getBallYPos(), ball.getBallWidth(), ball.getBallHeight());
+	double xSpeed = ball.getBallXSpeed();
+	double ySpeed = ball.getBallYSpeed();
+
+	// Now ySpeed is an lvalue and can be passed by reference
+	bricks->checkCollision(ball.getBallXPos(), ball.getBallYPos(), ySpeed, xSpeed, ball.getBallWidth(), ball.getBallHeight());
+
+	// Update the ball's Y speed with the potentially modified ySpeed
+	ball.setBallYSpeed(ySpeed);
+	ball.setBallXSpeed(xSpeed);
+
 
 	//update game state:
 	switch (gameState) {
