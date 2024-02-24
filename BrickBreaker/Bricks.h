@@ -26,10 +26,13 @@ public:
 
 	bool allBricksHit() const; //are all bricks hitted
 
+	void savePointsToFile(); //store points
+
 private:
 	int brickHeight = 50;
 	int brickWidth = 50;
 	int points = 0;
+	bool pointsSaved = false; //to store played points only one time
 
 	struct Brick {	//make a struct to store visibility and hitting count of bricks
 		SDL_Rect rect;	//rect for drawing
