@@ -37,7 +37,6 @@ void Bricks::drawBricks(SDL_Renderer* renderer) {
 }
 
 bool Bricks::checkCollision(double x, double y, double& ys, double& xs, int w, int h) {
-
     for (int i = 0; i < brickPos.size(); i++) { //for all of the bricks
         if (brickPos[i].isVisible) {    //if bricks are visible
             if (y + h > brickPos[i].rect.y && x + w > brickPos[i].rect.x    //check collision with ball
@@ -59,6 +58,7 @@ bool Bricks::checkCollision(double x, double y, double& ys, double& xs, int w, i
             }
         }
     }
+
     return false;
 }
 
@@ -83,3 +83,15 @@ int Bricks::getPoints()
 {
     return points;
 }
+
+bool Bricks::allBricksHit() const
+{
+    for (const auto& brick : brickPos) {  //for every brick in vector
+        if (brick.isVisible) {  //if they are visible
+            return false; //if not every brick is hitted yet return false
+        }
+    }
+    return true; //if the are no more bricks on screen
+}
+
+
