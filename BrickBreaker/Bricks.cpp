@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "SDL.h"
 #include "Ball.h"
+#include <fstream> 
 
 Bricks::Bricks()
 {
@@ -92,6 +93,17 @@ bool Bricks::allBricksHit() const
         }
     }
     return true; //if the are no more bricks on screen
+}
+
+void Bricks::savePointsToFile() {
+    if (!pointsSaved) {
+        std::ofstream file("points.txt", std::ios::app); //open the file
+        if (file.is_open()) {   //if the file is open
+            file << points << std::endl;    //write played points in it
+            file.close();   //close file
+            pointsSaved = true; //ensure that the points were stored only once
+        }
+    }
 }
 
 
