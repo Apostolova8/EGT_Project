@@ -37,7 +37,7 @@ bool Game::init(const char* title, int xpos, int ypos, int width, int height, in
 				TextureManager::Instance()->loadTexture("images/lives.jpg", "lives", renderer);
 
 				//load brick positions:
-				bricks->loadBricksPositions();
+				bricks->loadBricksPositions(); //load bricks positions
 			}
 
 			if (!ttf_init()) {
@@ -70,35 +70,22 @@ void Game::render() {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
 
-	//switch in game process:
-	switch (gameState) {
-	case START:	//case start -> see start button
-		TextureManager::Instance()->drawTexture("startButton", 150, 150, 300, 120, renderer);	//start button
-		break;
-	case PLAY:	//case play -> render all textures by their objects, after clicked start button
-		if (startButton == true) {
+	TextureManager::Instance()->drawTexture("startButton", 150, 150, 300, 120, renderer);	//draw start button
+
+		if (startButton == true) {	//if start button is clicked, draw everything on screen
 			screen->drawAll(renderer);
 			ball.drawBall(renderer);
 			paddle.drawPaddle(renderer);
 			bricks->drawBricks(renderer);
-			SDL_RenderCopy(renderer, textTextureFont1, NULL, &dRectFont1);
-			SDL_RenderCopy(renderer, textTextureFont2, NULL, &dRectFont2);
+			SDL_RenderCopy(renderer, textTextureFont1, NULL, &dRectFont1);	//lives
+			SDL_RenderCopy(renderer, textTextureFont2, NULL, &dRectFont2);	//scores
 		}
-		break;
-	case GAME_OVER:	//if lives = 0, game over
-		if (ball.getLives() <= 0) {
-			SDL_RenderCopy(renderer, textTextureFont3, NULL, &dRectFont3);
-			SDL_RenderCopy(renderer, textTextureFont4, NULL, &dRectFont4);
-			ball.setBallXSpeed(0);
-			ball.setBallYSpeed(0);
-			bricks->loadBricksPositions();
-			paddle.getPaddleXPos();
-			paddle.getPaddleYPos();
-			
-			//running = false;
+		if (ball.getLives() <= 0) {	//if lives = 0;
+			SDL_RenderCopy(renderer, textTextureFont3, NULL, &dRectFont3);	//game over
 		}
-		break;
-	}
+		else  if (bricks->allBricksHit()) { //if there are no more bricks
+			SDL_RenderCopy(renderer, textTextureFont4, NULL, &dRectFont4); //win
+		}
 
 	SDL_RenderPresent(renderer);
 }
@@ -115,16 +102,14 @@ void Game::handleEvents() {
 			int mouseY;
 			SDL_GetMouseState(&mouseX, &mouseY);
 			if (startButton == true) {	//ball start bouncing if user click on the screen if start button is clicked
-				gameState = PLAY;
-				ball.setBallYSpeed(0.5);
-				ball.setBallXSpeed(0.5);
+				ball.setBallYSpeed(0.4);
+				ball.setBallXSpeed(0.4);
 			}
 			else
 			{
 				if (mouseX > 150 && mouseX < 450 && mouseY > 150 && mouseY < 270) {
 					//check if the mouse click is on the start button
 					startButton = true;
-					gameState = PLAY;
 				}
 			}
 			break;
@@ -151,24 +136,6 @@ void Game::handleEvents() {
 			}
 			break;
 		}
-		if (event.button.button == SDL_BUTTON_LEFT) {	//left mouse click on screen
-			switch (gameState) {
-			case START:
-				if (startButton == true) {	//if start button is clicked game state is PLAY, if not - START
-					gameState = PLAY;
-				}
-				break;
-			case PLAY:	// -//- load textures
-				break;
-			case GAME_OVER:	//if game ends, set the state to start, set 2 lives, load all bricks and get ball x and y position
-				gameState = START;
-				ball.setLives(2);
-				bricks->loadBricksPositions();
-				SDL_RenderCopy(renderer, textTextureFont1, NULL, &dRectFont1);
-				SDL_RenderCopy(renderer, textTextureFont2, NULL, &dRectFont2);
-				break;
-			}
-		}
 	}
 }
 
@@ -187,7 +154,7 @@ bool Game::ttf_init() //for text
 	TTF_Font* font1 = TTF_OpenFont("text/Arcade.ttf", 50);
 	TTF_Font* font2 = TTF_OpenFont("text/Arcade.ttf", 50);
 	TTF_Font* font3 = TTF_OpenFont("text/Arcade.ttf", 100);
-	TTF_Font* font4 = TTF_OpenFont("text/Arcade.ttf", 25);
+	TTF_Font* font4 = TTF_OpenFont("text/Arcade.ttf", 100);
 
 	if (font1 == NULL || font2 == NULL || font3 == NULL || font4 == NULL) {
 		return false;
@@ -196,7 +163,7 @@ bool Game::ttf_init() //for text
 	SDL_Surface* tempLivesText = NULL;
 	SDL_Surface* tempScoreText = NULL;
 	SDL_Surface* tempGOText = NULL;
-	SDL_Surface* tempRestartText = NULL;
+	SDL_Surface* tempWinText = NULL;
 
 	tempLivesText = TTF_RenderText_Blended(font1, to_string(ball.getLives()).c_str(), { 255, 255, 255, 255 });
 	tempScoreText = TTF_RenderText_Blended(font2, to_string(bricks->getPoints()).c_str(), { 255, 255, 255, 255 });
@@ -204,13 +171,13 @@ bool Game::ttf_init() //for text
 	std::string gameOverText = "Game Over"; 
 	tempGOText = TTF_RenderText_Blended(font3, gameOverText.c_str(), { 255, 255, 255, 255 });
 
-	std::string gameRestartText = "Click for new game.";
-	tempRestartText = TTF_RenderText_Blended(font4, gameRestartText.c_str(), { 255, 255, 255, 255 });
+	std::string gameWinText = "Win";
+	tempWinText = TTF_RenderText_Blended(font4, gameWinText.c_str(), { 255, 255, 255, 255 });
 
 	textTextureFont1 = SDL_CreateTextureFromSurface(renderer, tempLivesText);
 	textTextureFont2 = SDL_CreateTextureFromSurface(renderer, tempScoreText);
 	textTextureFont3 = SDL_CreateTextureFromSurface(renderer, tempGOText);
-	textTextureFont4 = SDL_CreateTextureFromSurface(renderer, tempRestartText);
+	textTextureFont4 = SDL_CreateTextureFromSurface(renderer, tempWinText);
 
 	int tw, th;
 	SDL_QueryTexture(textTextureFont1, 0, 0, &tw, &th);
@@ -220,7 +187,7 @@ bool Game::ttf_init() //for text
 	SDL_QueryTexture(textTextureFont3, 0, 0, &tw, &th);
 	dRectFont3 = { 90, 150, tw, th };
 	SDL_QueryTexture(textTextureFont3, 0, 0, &tw, &th);
-	dRectFont4 = { 90, 250, tw, th };
+	dRectFont4 = { 90, 150, tw, th };
 
 	SDL_FreeSurface(tempLivesText);
 	TTF_CloseFont(font1);
@@ -228,7 +195,7 @@ bool Game::ttf_init() //for text
 	TTF_CloseFont(font2);
 	SDL_FreeSurface(tempGOText); 
 	TTF_CloseFont(font3);
-	SDL_FreeSurface(tempRestartText);
+	SDL_FreeSurface(tempWinText);
 	TTF_CloseFont(font4);
 
 	return true;
@@ -243,30 +210,34 @@ void Game::update() {
 	ball.checkCollision(paddle.getPaddleXPos(), paddle.getPaddleYPos(), paddle.getPaddleWidth(), paddle.getPaddleHeight());
 
 	//ball collision with walls:
-	ball.collissionWalls();
+	ball.collisionWalls();
 
-	double xSpeed = ball.getBallXSpeed();
+	double xSpeed = ball.getBallXSpeed();	//make new variables to manipulate the excisting values of ball's speed
 	double ySpeed = ball.getBallYSpeed();
 
-	// Now ySpeed is an lvalue and can be passed by reference
+	//ball collision with bricks:
 	bricks->checkCollision(ball.getBallXPos(), ball.getBallYPos(), ySpeed, xSpeed, ball.getBallWidth(), ball.getBallHeight());
 
 	// Update the ball's Y speed with the potentially modified ySpeed
-	ball.setBallYSpeed(ySpeed);
+	ball.setBallYSpeed(ySpeed);	//set ball's speed value to new variable which is reversing speed when it hits brick
 	ball.setBallXSpeed(xSpeed);
 
-
-	//update game state:
-	switch (gameState) {
-	case START:
-		break;
-	case PLAY:
-		if (ball.getLives() <= 0) {	//if lives = 0; game state = game over
-			gameState = GAME_OVER;
-		}
-		break;
-	case GAME_OVER:
-		break;
+	if (ball.getLives() == 0) {	//if lives = 0
+		//reset ball and paddle positions and stop the ball:
+		ball.setBallXPos(275);
+		ball.setBallYPos(330);
+		ball.setBallXSpeed(0);
+		ball.setBallYSpeed(0);
+		paddle.setPaddleXPos(225);
+		paddle.setPaddleYPos(340);
+	}
+	else if (bricks->allBricksHit()) {
+		ball.setBallXPos(275);
+		ball.setBallYPos(330);
+		ball.setBallXSpeed(0);
+		ball.setBallYSpeed(0);
+		paddle.setPaddleXPos(225);
+		paddle.setPaddleYPos(340);
 	}
 }
 
@@ -281,7 +252,7 @@ bool Game::isRunning() {
 	return Game::running;
 }
 
-Game::Game() : gameState(START), lives(2) {
+Game::Game() {
 	Game::window = NULL;
 	Game::renderer = NULL;
 	Game::running = true;
