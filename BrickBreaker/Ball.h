@@ -45,7 +45,7 @@ public:
 
 private:
 	double ballXPos = 275; //x-position of ball (left edge)
-	double ballYPos = 330; //y-position of ball (top edge)
+	double ballYPos = 320; //y-position of ball (top edge)
 	int ballWidth = 20; //ball width
 	int ballHeight = 20; //ball height
     double ballXSpeed = 0; //velocity of the ball
