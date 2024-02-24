@@ -6,6 +6,7 @@
 #include "Bricks.h"
 #include "Ball.h"
 #include "Screen.h"
+#include "SoundManager.h"
 
 using namespace std;
 
@@ -26,6 +27,15 @@ bool Game::init(const char* title, int xpos, int ypos, int width, int height, in
 				cout << "Renderer creation success\n";
 				SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
+				Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+				Mix_Music* backgroundMusic = Mix_LoadMUS("music/backgroundMusic.mp3");
+				Mix_PlayMusic(backgroundMusic, -1);
+
+				startButtonSound = Mix_LoadWAV("music/startButton.mp3");
+				if (startButtonSound == NULL) {
+					cout << "Failed to load Start Button Sound." << Mix_GetError << endl;
+				}
+
 				//load textures:
 				TextureManager::Instance()->loadTexture("images/startButton.jpg", "startButton", renderer);
 				TextureManager::Instance()->loadTexture("images/background.jpg", "background", renderer);
@@ -38,11 +48,8 @@ bool Game::init(const char* title, int xpos, int ypos, int width, int height, in
 
 				//load brick positions:
 				bricks->loadBricksPositions(); //load bricks positions
-			}
+				SoundManager::Instance()->playMusic("backgroundMusic", 0, 5000);
 
-			if (!ttf_init()) {
-				cout << "Failed to initialize TTF\n";
-				return false;
 			}
 
 			else {
@@ -62,8 +69,6 @@ bool Game::init(const char* title, int xpos, int ypos, int width, int height, in
 	}
 	cout << "Init success\n";
 	running = true;
-
-	return true;
 }
 
 void Game::render() {
@@ -109,6 +114,7 @@ void Game::handleEvents() {
 			{
 				if (mouseX > 150 && mouseX < 450 && mouseY > 150 && mouseY < 270) {
 					//check if the mouse click is on the start button
+					Mix_PlayChannel(-1, startButtonSound, 0);
 					startButton = true;
 				}
 			}
@@ -144,6 +150,14 @@ void Game::movePaddle(int x, int y)
 	paddle.setPaddleXPos(paddle.getPaddleXPos() + x);
 	paddle.setPaddleYPos(paddle.getPaddleXPos() + y);
 }
+
+//void Game::loadAndPlaySound() {
+//	SoundManager::Instance()->load("music/backgroundMusic.mp3", "backgroundMusic", 1); //music - 1
+//	SoundManager::Instance()->load("assets/woosh-89.wav", "woosh", 0);
+//
+//	SoundManager::Instance()->playSound("woosh", -1, 0);
+//
+//}
 
 bool Game::ttf_init() //for text
 {
