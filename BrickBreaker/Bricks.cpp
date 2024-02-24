@@ -46,12 +46,17 @@ bool Bricks::checkCollision(double x, double y, int w, int h) {
 
                 if (brickPos[i].hitCount == 2) { //gray brick
                     brickPos[i].hitCount--; //turn gray brick into yellow
+                    points += 1;
                     cout << "hit gray brick\n";
                 }
-                else if (brickPos[i].hitCount <= 0) {
-                    brickPos[i].isVisible = false; // Hide the yellow brick if hit count reaches 0
-                    std::cout << "Ball hit brick" << std::endl;
+                else if (brickPos[i].hitCount == 0) { //gray brick
+                    brickPos[i].isVisible = false; //turn gray brick into yellow
+                    cout << "hit gray brick\n";
                 }
+                //else if (brickPos[i].hitCount == 0) { 
+                //    brickPos[i].isVisible == false;
+                //    cout << "hit gray brick\n";
+                //}
             }
         }
     }
@@ -73,4 +78,9 @@ int Bricks::getBrickWidth() const {
 
 void Bricks::setBrickWidth(int brickWidth) {
     Bricks::brickWidth = brickWidth;
+}
+
+int Bricks::getPoints()
+{
+    return points;
 }
