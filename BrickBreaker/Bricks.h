@@ -26,8 +26,13 @@ private:
 	int brickHeight = 50;
 	int brickWidth = 50;
 
-	std::vector<SDL_Rect> brickPos; //hold bricks positions
-	bool brickV[10]; //which brick is visible
-	std::vector<int> hitCount; //how many times the brick is hitted
+	struct Brick {	//make a struct to store visibility and hitting count of bricks
+		SDL_Rect rect;	//rect for drawing
+		bool isVisible;	//bool for visability
+		int hitCount;	//int for track hit count of different types of bricks
+
+		Brick(SDL_Rect rect, bool isVisible, int hitCount) : rect(rect), isVisible(isVisible), hitCount(hitCount) {}
+	};
+	std::vector<Brick> brickPos; //vector for holding bricks positions
 };
 
