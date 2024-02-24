@@ -6,12 +6,7 @@
 #include "Paddle.h"
 #include "SDL_ttf.h"
 #include "SDL.h"
-
-enum GameState {  //game set
-	START,
-	PLAY,
-	GAME_OVER
-};
+#include "SDL_mixer.h"
 
 class Game
 {
@@ -32,6 +27,8 @@ private:
 	SDL_Renderer* renderer = NULL;
 	SDL_Texture* texture = NULL;
 
+	Mix_Chunk* startButtonSound;
+
 	//lives:
 	SDL_Texture* textTextureFont1;
 	SDL_Rect dRectFont1;
@@ -41,7 +38,7 @@ private:
 	//game over:
 	SDL_Texture* textTextureFont3;
 	SDL_Rect dRectFont3;
-	//restart:
+	//win:
 	SDL_Texture* textTextureFont4;
 	SDL_Rect dRectFont4;
 
@@ -49,12 +46,11 @@ private:
 
 	bool startButton = false; //is the start button clicked
 
-	bool stopMoving = true;
+	bool stopMoving = true;	//if paddle is next to wall
 
 	//objects
 	Ball ball;
 	Paddle paddle;
-	GameState gameState;
 
 	int lives;
 	int points;
