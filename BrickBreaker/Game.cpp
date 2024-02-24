@@ -32,9 +32,6 @@ bool Game::init(const char* title, int xpos, int ypos, int width, int height, in
 				Mix_PlayMusic(backgroundMusic, -1);
 
 				startButtonSound = Mix_LoadWAV("music/startButton.mp3");
-				if (startButtonSound == NULL) {
-					cout << "Failed to load Start Button Sound." << Mix_GetError << endl;
-				}
 
 				//load textures:
 				TextureManager::Instance()->loadTexture("images/startButton.jpg", "startButton", renderer);
@@ -87,9 +84,11 @@ void Game::render() {
 		}
 		if (ball.getLives() <= 0) {	//if lives = 0;
 			SDL_RenderCopy(renderer, textTextureFont3, NULL, &dRectFont3);	//game over
+			bricks->savePointsToFile();
 		}
 		else  if (bricks->allBricksHit()) { //if there are no more bricks
 			SDL_RenderCopy(renderer, textTextureFont4, NULL, &dRectFont4); //win
+			bricks->savePointsToFile();	
 		}
 
 	SDL_RenderPresent(renderer);
@@ -150,14 +149,6 @@ void Game::movePaddle(int x, int y)
 	paddle.setPaddleXPos(paddle.getPaddleXPos() + x);
 	paddle.setPaddleYPos(paddle.getPaddleXPos() + y);
 }
-
-//void Game::loadAndPlaySound() {
-//	SoundManager::Instance()->load("music/backgroundMusic.mp3", "backgroundMusic", 1); //music - 1
-//	SoundManager::Instance()->load("assets/woosh-89.wav", "woosh", 0);
-//
-//	SoundManager::Instance()->playSound("woosh", -1, 0);
-//
-//}
 
 bool Game::ttf_init() //for text
 {
