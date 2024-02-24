@@ -39,8 +39,8 @@ private:
 	SDL_Texture* textTextureFont2;
 	SDL_Rect dRectFont2;
 	//game over:
-	//SDL_Texture* textTextureFont3;
-	//SDL_Rect dRectFont3;
+	SDL_Texture* textTextureFont3;
+	SDL_Rect dRectFont3;
 
 	bool running;
 
