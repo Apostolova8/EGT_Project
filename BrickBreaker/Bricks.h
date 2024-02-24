@@ -24,6 +24,8 @@ public:
 
 	int getPoints();
 
+	bool allBricksHit() const; //are all bricks hitted
+
 private:
 	int brickHeight = 50;
 	int brickWidth = 50;
