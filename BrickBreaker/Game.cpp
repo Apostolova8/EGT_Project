@@ -86,7 +86,7 @@ void Game::render() {
 		break;
 	case GAME_OVER:	//if lives = 0, game over
 		if (ball.getLives() <= 0) {
-			//SDL_RenderCopy(renderer, textTextureFont3, NULL, &dRectFont3);
+			SDL_RenderCopy(renderer, textTextureFont3, NULL, &dRectFont3);
 			//running = false;
 		}
 		break;
@@ -108,8 +108,8 @@ void Game::handleEvents() {
 			SDL_GetMouseState(&mouseX, &mouseY);
 			if (startButton == true) {	//ball start bouncing if user click on the screen if start button is clicked
 				gameState = PLAY;
-				ball.setBallYSpeed(0.25);
-				ball.setBallXSpeed(0.25);
+				ball.setBallYSpeed(0.9);
+				ball.setBallXSpeed(0.9);
 			}
 			else
 			{
@@ -152,6 +152,7 @@ void Game::handleEvents() {
 			case PLAY:	// -//- load textures
 				break;
 			case GAME_OVER:	//if game ends, set the state to start, set 2 lives, load all bricks and get ball x and y position
+				SDL_RenderCopy(renderer, textTextureFont3, NULL, &dRectFont3);
 				gameState = START;
 				ball.setLives(2);
 				bricks->loadBricksPositions();
@@ -179,40 +180,40 @@ bool Game::ttf_init() //for text
 
 	TTF_Font* font1 = TTF_OpenFont("text/Arcade.ttf", 50);
 	TTF_Font* font2 = TTF_OpenFont("text/Arcade.ttf", 50);
-	///TTF_Font* font3 = TTF_OpenFont("text/Arcade.ttf", 300);
+	TTF_Font* font3 = TTF_OpenFont("text/Arcade.ttf", 100);
 
-	if (font1 == NULL || font2 == NULL /*font3 == NULL*/) {
+	if (font1 == NULL || font2 == NULL || font3 == NULL) {
 		return false;
 	}
 
 	SDL_Surface* tempLivesText = NULL;
 	SDL_Surface* tempScoreText = NULL;
-	//SDL_Surface* tempGOText = NULL;
+	SDL_Surface* tempGOText = NULL;
 
 	tempLivesText = TTF_RenderText_Blended(font1, to_string(ball.getLives()).c_str(), { 255, 255, 255, 255 });
 	tempScoreText = TTF_RenderText_Blended(font2, to_string(bricks->getPoints()).c_str(), { 255, 255, 255, 255 });
 	
-	//std::string gameOverText = "Game Over"; 
-	//tempGOText = TTF_RenderText_Blended(font3, gameOverText.c_str(), { 255, 255, 255, 255 });
+	std::string gameOverText = "Game Over"; 
+	tempGOText = TTF_RenderText_Blended(font3, gameOverText.c_str(), { 255, 255, 255, 255 });
 
 	textTextureFont1 = SDL_CreateTextureFromSurface(renderer, tempLivesText);
 	textTextureFont2 = SDL_CreateTextureFromSurface(renderer, tempScoreText);
-	//textTextureFont3 = SDL_CreateTextureFromSurface(renderer, tempGOText);
+	textTextureFont3 = SDL_CreateTextureFromSurface(renderer, tempGOText);
 
 	int tw, th;
 	SDL_QueryTexture(textTextureFont1, 0, 0, &tw, &th);
 	dRectFont1 = { 540, 6, tw, th };
 	SDL_QueryTexture(textTextureFont2, 0, 0, &tw, &th);
 	dRectFont2 = { 300, 8, tw, th };
-	//SDL_QueryTexture(textTextureFont3, 0, 0, &tw, &th);
-	//dRectFont3 = { 300, 200, tw, th };
+	SDL_QueryTexture(textTextureFont3, 0, 0, &tw, &th);
+	dRectFont3 = { 90, 150, tw, th };
 
 	SDL_FreeSurface(tempLivesText);
 	TTF_CloseFont(font1);
 	SDL_FreeSurface(tempScoreText);
 	TTF_CloseFont(font2);
-	//SDL_FreeSurface(tempGOText); 
-	//TTF_CloseFont(font3);
+	SDL_FreeSurface(tempGOText); 
+	TTF_CloseFont(font3);
 
 	return true;
 }
