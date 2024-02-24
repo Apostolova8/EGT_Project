@@ -87,6 +87,9 @@ void Game::render() {
 	case GAME_OVER:	//if lives = 0, game over
 		if (ball.getLives() <= 0) {
 			SDL_RenderCopy(renderer, textTextureFont3, NULL, &dRectFont3);
+			SDL_RenderCopy(renderer, textTextureFont4, NULL, &dRectFont4);
+			ball.setBallXSpeed(0);
+			ball.setBallYSpeed(0);
 			//running = false;
 		}
 		break;
@@ -116,6 +119,7 @@ void Game::handleEvents() {
 				if (mouseX > 150 && mouseX < 450 && mouseY > 150 && mouseY < 270) {
 					//check if the mouse click is on the start button
 					startButton = true;
+					gameState = PLAY;
 				}
 			}
 			break;
@@ -152,14 +156,11 @@ void Game::handleEvents() {
 			case PLAY:	// -//- load textures
 				break;
 			case GAME_OVER:	//if game ends, set the state to start, set 2 lives, load all bricks and get ball x and y position
-				SDL_RenderCopy(renderer, textTextureFont3, NULL, &dRectFont3);
 				gameState = START;
 				ball.setLives(2);
 				bricks->loadBricksPositions();
 				SDL_RenderCopy(renderer, textTextureFont1, NULL, &dRectFont1);
 				SDL_RenderCopy(renderer, textTextureFont2, NULL, &dRectFont2);
-				ball.getBallXPos();
-				ball.getBallYPos();
 				break;
 			}
 		}
@@ -181,14 +182,16 @@ bool Game::ttf_init() //for text
 	TTF_Font* font1 = TTF_OpenFont("text/Arcade.ttf", 50);
 	TTF_Font* font2 = TTF_OpenFont("text/Arcade.ttf", 50);
 	TTF_Font* font3 = TTF_OpenFont("text/Arcade.ttf", 100);
+	TTF_Font* font4 = TTF_OpenFont("text/Arcade.ttf", 25);
 
-	if (font1 == NULL || font2 == NULL || font3 == NULL) {
+	if (font1 == NULL || font2 == NULL || font3 == NULL || font4 == NULL) {
 		return false;
 	}
 
 	SDL_Surface* tempLivesText = NULL;
 	SDL_Surface* tempScoreText = NULL;
 	SDL_Surface* tempGOText = NULL;
+	SDL_Surface* tempRestartText = NULL;
 
 	tempLivesText = TTF_RenderText_Blended(font1, to_string(ball.getLives()).c_str(), { 255, 255, 255, 255 });
 	tempScoreText = TTF_RenderText_Blended(font2, to_string(bricks->getPoints()).c_str(), { 255, 255, 255, 255 });
@@ -196,9 +199,13 @@ bool Game::ttf_init() //for text
 	std::string gameOverText = "Game Over"; 
 	tempGOText = TTF_RenderText_Blended(font3, gameOverText.c_str(), { 255, 255, 255, 255 });
 
+	std::string gameRestartText = "Click for new game.";
+	tempRestartText = TTF_RenderText_Blended(font4, gameRestartText.c_str(), { 255, 255, 255, 255 });
+
 	textTextureFont1 = SDL_CreateTextureFromSurface(renderer, tempLivesText);
 	textTextureFont2 = SDL_CreateTextureFromSurface(renderer, tempScoreText);
 	textTextureFont3 = SDL_CreateTextureFromSurface(renderer, tempGOText);
+	textTextureFont4 = SDL_CreateTextureFromSurface(renderer, tempRestartText);
 
 	int tw, th;
 	SDL_QueryTexture(textTextureFont1, 0, 0, &tw, &th);
@@ -207,6 +214,8 @@ bool Game::ttf_init() //for text
 	dRectFont2 = { 300, 8, tw, th };
 	SDL_QueryTexture(textTextureFont3, 0, 0, &tw, &th);
 	dRectFont3 = { 90, 150, tw, th };
+	SDL_QueryTexture(textTextureFont3, 0, 0, &tw, &th);
+	dRectFont4 = { 90, 250, tw, th };
 
 	SDL_FreeSurface(tempLivesText);
 	TTF_CloseFont(font1);
@@ -214,6 +223,8 @@ bool Game::ttf_init() //for text
 	TTF_CloseFont(font2);
 	SDL_FreeSurface(tempGOText); 
 	TTF_CloseFont(font3);
+	SDL_FreeSurface(tempRestartText);
+	TTF_CloseFont(font4);
 
 	return true;
 }
