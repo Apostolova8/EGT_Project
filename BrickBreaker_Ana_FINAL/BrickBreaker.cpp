@@ -9,7 +9,7 @@ const int WINDOW_HEIGHT = 400;
 int main(int argc, char* argv[]) {
 
 	game = new Game();
-	game->init("My new window", SDL_WINDOWPOS_CENTERED,
+	game->init("Brick Breaker By Ana Apostolova", SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH,
 		WINDOW_HEIGHT, SDL_WINDOW_RESIZABLE);
 
