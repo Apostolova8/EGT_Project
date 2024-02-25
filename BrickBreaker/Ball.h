@@ -9,7 +9,7 @@ public:
 
 	bool checkCollision(double x, double y, int w, int h);
 
-    bool collissionWalls();
+    bool collisionWalls();
 
     bool ballSpeed();
 
@@ -53,5 +53,7 @@ private:
 
     int lives = 2;
 
+    Uint32 lifeTime = 0; //in the start of the game there are no lost lives yet
+    const Uint32 lifeLossCooldown = 1000;   //1 second cooldown between losing lives
 };
 
