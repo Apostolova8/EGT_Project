@@ -22,16 +22,16 @@ void Bricks::loadBricksPositions() {
         brickPos.push_back(Brick(brickRect, true, 2)); //true visibility and 2 hits for gray bricks
     }
 
-    //yellow bricks in third row:
-    for (int i = 0; i < 5; i++) {
-        SDL_Rect brickRect = { 50 + i * 100, 150, brickWidth, brickHeight };
-        brickPos.push_back(Brick(brickRect, true, 1)); //true visibility and 1 hit for yellow bricks
-    }
-    //gray bricks in fourth row:
-    for (int i = 5; i < 10; i++) {
-        SDL_Rect brickRect = { 100 + (i - 5) * 100, 200, brickWidth, brickHeight };
-        brickPos.push_back(Brick(brickRect, true, 2)); //true visibility and 2 hits for gray bricks
-    }
+    ////yellow bricks in third row:
+    //for (int i = 0; i < 5; i++) {
+    //    SDL_Rect brickRect = { 50 + i * 100, 150, brickWidth, brickHeight };
+    //    brickPos.push_back(Brick(brickRect, true, 1)); //true visibility and 1 hit for yellow bricks
+    //}
+    ////gray bricks in fourth row:
+    //for (int i = 5; i < 10; i++) {
+    //    SDL_Rect brickRect = { 100 + (i - 5) * 100, 200, brickWidth, brickHeight };
+    //    brickPos.push_back(Brick(brickRect, true, 2)); //true visibility and 2 hits for gray bricks
+    //}
 }
 
 void Bricks::drawBricks(SDL_Renderer* renderer) {
@@ -74,6 +74,27 @@ bool Bricks::checkCollision(double x, double y, double& ys, double& xs, int w, i
     return false;
 }
 
+bool Bricks::getAllBricksHit() const
+{
+    for (int i = 0; i < brickPos.size(); i++) {  //all bricks in vector
+        if (brickPos[i].isVisible) {  //check if the brick is visible
+            return false;  //if not every bricks is hiiden
+        }
+    }
+    return true;    //if there are no more bricks 
+}
+
+void Bricks::savePointsToFile() {
+    if (!pointsSaved) {
+        std::ofstream file("points.txt", std::ios::app); //open the file
+        if (file.is_open()) {   //if the file is open
+            file << points << std::endl;    //write played points in it
+            file.close();   //close file
+            pointsSaved = true; //ensure that the points were stored only once
+        }
+    }
+}
+
 
 int Bricks::getBrickHeight() const {
     return brickHeight;
@@ -96,25 +117,6 @@ int Bricks::getPoints()
     return points;
 }
 
-bool Bricks::allBricksHit() const
-{
-    for (const auto& brick : brickPos) {  //for every brick in vector
-        if (brick.isVisible) {  //if they are visible
-            return false; //if not every brick is hitted yet return false
-        }
-    }
-    return true; //if there are no more bricks on screen
-}
 
-void Bricks::savePointsToFile() {
-    if (!pointsSaved) {
-        std::ofstream file("points.txt", std::ios::app); //open the file
-        if (file.is_open()) {   //if the file is open
-            file << points << std::endl;    //write played points in it
-            file.close();   //close file
-            pointsSaved = true; //ensure that the points were stored only once
-        }
-    }
-}
 
 
