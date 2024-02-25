@@ -28,6 +28,9 @@ private:
 	SDL_Texture* texture = NULL;
 
 	Mix_Chunk* startButtonSound;
+	Mix_Chunk* wallsSound;
+	Mix_Chunk* winSound;
+	Mix_Chunk* gameOverSound;
 	Mix_Music* backgroundMusic = nullptr;
 
 	//lives:
