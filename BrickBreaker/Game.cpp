@@ -87,6 +87,7 @@ void Game::render() {
 		if (ball.getLives() == 0) {	//if lives = 0;
 			bricks->savePointsToFile();
 			SDL_RenderCopy(renderer, textTextureFont3, NULL, &dRectFont3);	//game over
+			Mix_CloseAudio(); //stop background music if game is over
 		}
 		if (bricks->getAllBricksHit()) {
 			bricks->savePointsToFile();
