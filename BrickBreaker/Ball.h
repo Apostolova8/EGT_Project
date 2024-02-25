@@ -48,12 +48,9 @@ private:
 	double ballYPos = 320; //y-position of ball (top edge)
 	int ballWidth = 20; //ball width
 	int ballHeight = 20; //ball height
-    double ballXSpeed = 0; //velocity of the ball
+   	double ballXSpeed = 0; //velocity of the ball
 	double ballYSpeed = 0;
 
     int lives = 2;
-
-    Uint32 lifeTime = 0; //in the start of the game there are no lost lives yet
-    const Uint32 lifeLossCooldown = 1000;   //1 second cooldown between losing lives
 };
 
