@@ -29,7 +29,7 @@ public:
 	void savePointsToFile(); //store points
 
 private:
-	int brickHeight = 50;
+	int brickHeight = 30;
 	int brickWidth = 50;
 	int points = 0;
 	bool pointsSaved = false; //to store played points only one time
