@@ -32,7 +32,7 @@ bool SoundManager::load(const char* fileName, string id, int type) {
 		}
 	}
 }
-//funkcii za play-vane na muzika i sound-ove:
+
 void SoundManager::playMusic(string id, int loop, int ms) {
 	Mix_FadeInMusic(s_mMusic[id], loop, ms);
 }
