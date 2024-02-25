@@ -31,6 +31,9 @@ bool Game::init(const char* title, int xpos, int ypos, int width, int height, in
 				Mix_Music* backgroundMusic = Mix_LoadMUS("music/backgroundMusic.mp3");
 				Mix_PlayMusic(backgroundMusic, -1);
 				startButtonSound = Mix_LoadWAV("music/startButton.mp3");
+				wallsSound = Mix_LoadWAV("music/walls.mp3");
+				winSound = Mix_LoadWAV("music/win.mp3");
+				gameOverSound = Mix_LoadWAV("music/gameOver.mp3");
 
 				//load textures:
 				TextureManager::Instance()->loadTexture("images/startButton.jpg", "startButton", renderer);
@@ -85,13 +88,18 @@ void Game::render() {
 			SDL_RenderCopy(renderer, textTextureFont2, NULL, &dRectFont2);	//scores
 		}
 		if (ball.getLives() == 0) {	//if lives = 0;
-			bricks->savePointsToFile();
-			SDL_RenderCopy(renderer, textTextureFont3, NULL, &dRectFont3);	//game over
+			bricks->savePointsToFile(); //save score
+			SDL_RenderCopy(renderer, textTextureFont3, NULL, &dRectFont3);	//game over text
+			Mix_PlayChannel(-1, gameOverSound, 0); //game over sound
+			SDL_Delay(2000); //delay between game over sound and close audio
 			Mix_CloseAudio(); //stop background music if game is over
 		}
 		if (bricks->getAllBricksHit()) {
 			bricks->savePointsToFile();
-			SDL_RenderCopy(renderer, textTextureFont4, NULL, &dRectFont4); // Example of drawing win text
+			SDL_RenderCopy(renderer, textTextureFont4, NULL, &dRectFont4); 
+			Mix_PlayChannel(-1, winSound, 0);
+			SDL_Delay(2000);
+			Mix_CloseAudio();
 		}
 
 	SDL_RenderPresent(renderer);
@@ -126,6 +134,7 @@ void Game::handleEvents() {
 			case SDLK_LEFT:
 				if (paddle.getPaddleXPos() == 15) {
 					paddle.stopMovingPaddle = false;	//stop moving paddle when x-position of paddle reaches 15 (to the left wall)
+					Mix_PlayChannel(-1, wallsSound, 0);
 				}
 				else {
 					paddle.setPaddleXPos(paddle.getPaddleXPos() - 30); //left moving
@@ -134,6 +143,7 @@ void Game::handleEvents() {
 			case SDLK_RIGHT:
 				if (paddle.getPaddleXPos() == 465) {
 					paddle.stopMovingPaddle = false;	//stop moving paddle when x-position of paddle reaches 465 (to the right wall)
+					Mix_PlayChannel(-1, wallsSound, 0);
 				}
 				else {
 					paddle.setPaddleXPos(paddle.getPaddleXPos() + 30); //right moving
@@ -197,7 +207,7 @@ bool Game::ttf_init() //for text
 	tempGOText = TTF_RenderText_Blended(font3, gameOverText.c_str(), { 51, 0, 0, 255 });
 	textTextureFont3 = SDL_CreateTextureFromSurface(renderer, tempGOText);
 	SDL_QueryTexture(textTextureFont3, 0, 0, &tw, &th);
-	dRectFont3 = { 70, 150, tw, th };
+	dRectFont3 = { 80, 150, tw, th };
 	SDL_FreeSurface(tempGOText);
 	TTF_CloseFont(font3);
 
