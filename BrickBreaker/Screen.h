@@ -61,8 +61,8 @@ private:
 
 	//lives:
 	int livesXPos = 490; //x-position of heart (left edge)
-	int livesYPos = 8; //y-position of left heart (top edge)
-	int livesWidth = 30; //left wall heart
-	int livesHeight = 30; //left wall heart
+	int livesYPos = 7; //y-position of left heart (top edge)
+	int livesWidth = 40; //left wall heart
+	int livesHeight = 40; //left wall heart
 };
 
