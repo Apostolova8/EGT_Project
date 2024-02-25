@@ -30,6 +30,6 @@ private:
 	int paddleXPos = 225; //x-position of paddle (left edge)
 	int paddleYPos = 340; //y-position of paddle (top edge)
 	int paddleWidth = 120;	//width
-	int paddleHeight = 30;	//height
+	int paddleHeight = 20;	//height
 };
 
