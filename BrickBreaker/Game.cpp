@@ -157,7 +157,7 @@ bool Game::ttf_init() //for text
 		return false;
 	}
 
-
+	//TEXT FOR LIVES:
 	TTF_Font* font1 = TTF_OpenFont("text/Arcade.ttf", 50);
 	if (font1 == NULL) {
 		return false;
@@ -170,7 +170,7 @@ bool Game::ttf_init() //for text
 	SDL_FreeSurface(tempLivesText);
 	TTF_CloseFont(font1);
 
-
+	//TEXT FOR POINTS
 	TTF_Font* font2 = TTF_OpenFont("text/Arcade.ttf", 50);
 	if (font2 == NULL) {
 		return false;
@@ -183,7 +183,7 @@ bool Game::ttf_init() //for text
 	SDL_FreeSurface(tempScoreText);
 	TTF_CloseFont(font2);
 
-
+	//TEXT FOR GAME OVER
 	TTF_Font* font3 = TTF_OpenFont("text/Arcade.ttf", 100);
 	if (font3 == NULL) {
 		return false;
@@ -197,7 +197,7 @@ bool Game::ttf_init() //for text
 	SDL_FreeSurface(tempGOText);
 	TTF_CloseFont(font3);
 
-
+	//TEXT FOR WIN
 	TTF_Font* font4 = TTF_OpenFont("text/Arcade.ttf", 100);
 	if (font4 == NULL) {
 		return false;
