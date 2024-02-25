@@ -28,6 +28,8 @@ public:
 
 	void savePointsToFile(); //store points
 
+	Mix_Chunk* bricksSound;
+
 private:
 	int brickHeight = 30;
 	int brickWidth = 50;
