@@ -46,6 +46,8 @@ bool Bricks::checkCollision(double x, double y, double& ys, double& xs, int w, i
             && x + w > brickPos[i].rect.x && x < brickPos[i].rect.x + brickPos[i].rect.w) {
            
             ys = -ys;
+            bricksSound = Mix_LoadWAV("music/bricks.mp3");
+            Mix_PlayChannel(-1, bricksSound, 0);
 
             if (brickPos[i].hitCount == 1) { //yellow bricks
                 brickPos[i].isVisible = false;
