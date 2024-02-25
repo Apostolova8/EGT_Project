@@ -28,6 +28,7 @@ private:
 	SDL_Texture* texture = NULL;
 
 	Mix_Chunk* startButtonSound;
+	Mix_Music* backgroundMusic = nullptr;
 
 	//lives:
 	SDL_Texture* textTextureFont1;
