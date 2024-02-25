@@ -27,14 +27,20 @@ bool Ball::checkCollision(double x, double y, int w, int h)
 		return true;
     }
     if (ballYPos > 340) {
-        ballXPos = 275; //restart ball position
-        ballYPos = 330;
-        lives--;
+        Uint32 currentTime = SDL_GetTicks(); //current time in milliseconds
+        if (currentTime - lifeTime >= lifeLossCooldown) { //if the elapsed time since life was lost >= to the cooldown period 
+            lives--; //take 1 life
+            cout << "-1 life\n";
+            lifeTime = currentTime; //update last took life
+
+            ballXPos = x + 60; //reset ball position to bounce from the middle of paddle
+            ballYPos = y - 20;
+        }
     }
 	return false;
 }
 
-bool Ball::collissionWalls()
+bool Ball::collisionWalls()
 {
     if (ballXPos < 25 || ballXPos + ballWidth >= 575) { //if the ball hits left or right edge of walls
         ballXSpeed = -ballXSpeed; //reverse direction horizontally
@@ -104,5 +110,6 @@ int Ball::getLives()
 {
     return lives;
 }
+
 
 
