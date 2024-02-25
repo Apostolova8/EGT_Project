@@ -45,27 +45,18 @@ bool Bricks::checkCollision(double x, double y, double& ys, double& xs, int w, i
         if (brickPos[i].isVisible && y + h > brickPos[i].rect.y && y < brickPos[i].rect.y + brickPos[i].rect.h
             && x + w > brickPos[i].rect.x && x < brickPos[i].rect.x + brickPos[i].rect.w) {
            
-            //ys = ys + (rand() % 20 - 10) / 100.0;
-            //if (xs == 0) //don't want the ball going straight up to start
-            //    xs = 1;
-            //ys = -4;
-
             ys = -ys;
-            
-            
-            
-          //  angle_of_incidience = atan2(ys, xs) - atan2()
 
-            if (brickPos[i].hitCount == 1) { // If hit count is 3 or more, brick disappears
+            if (brickPos[i].hitCount == 1) { //yellow bricks
                 brickPos[i].isVisible = false;
                 points += 1;
             }
-            if (brickPos[i].hitCount == 2) {
+            if (brickPos[i].hitCount == 2) { //broken gray bricks
                 brickPos[i].isVisible = false;
                 points += 1;
                
             }
-            if (brickPos[i].hitCount == 3) {
+            if (brickPos[i].hitCount == 3) { //gray bricks
                 brickPos[i].hitCount = 2;
                 points += 1;
                 xs = -xs;
