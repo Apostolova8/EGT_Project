@@ -46,6 +46,7 @@ bool Game::init(const char* title, int xpos, int ypos, int width, int height, in
 				TextureManager::Instance()->loadTexture("images/brickGBroken.jpg", "brickGBroken", renderer);
 				TextureManager::Instance()->loadTexture("images/lives.jpg", "lives", renderer);
 				TextureManager::Instance()->loadTexture("images/EGT.png", "EGT", renderer);
+				TextureManager::Instance()->loadTexture("images/start.jpg", "start", renderer);
 
 				//load brick positions:
 				bricks->loadBricksPositions(); //load bricks positions
@@ -76,8 +77,9 @@ void Game::render() {
 	SDL_SetRenderDrawColor(renderer, 245, 222, 179, 255);
 	SDL_RenderClear(renderer);
 
+	TextureManager::Instance()->drawTexture("start", 0, 0, 600, 400, renderer);
 	TextureManager::Instance()->drawTexture("startButton", 150, 150, 300, 120, renderer);	//draw start button
-	TextureManager::Instance()->drawTexture("EGT", 10, 10, 60, 60, renderer);
+	TextureManager::Instance()->drawTexture("EGT", 530, 10, 60, 60, renderer);
 
 		if (startButton == true) {	//if start button is clicked, draw everything on screen
 			screen->drawAll(renderer);
@@ -239,7 +241,7 @@ void Game::update() {
 	//ball collision with walls:
 	ball.collisionWalls();
 
-	double xSpeed = ball.getBallXSpeed();	//make new variables for ball's speed to manipulate the excisting values of ball's speed
+	double xSpeed = ball.getBallXSpeed();	//make new variables for ball's speed to manipulate the existing values of ball's speed
 	double ySpeed = ball.getBallYSpeed();
 
 	//ball collision with bricks:
@@ -249,8 +251,7 @@ void Game::update() {
 	ball.setBallYSpeed(ySpeed);	//set ball's speed value to the new variable which is reversing speed when it hits brick 
 	ball.setBallXSpeed(xSpeed);
 
-	if (ball.getLives() == 0) {	//if lives = 0
-		//reset ball and paddle positions and stop the ball:
+	if (ball.getLives() == 0) {	//if lives = 0, reset ball speed and position, and paddle position
 		ball.setBallXPos(275);
 		ball.setBallYPos(330);
 		ball.setBallXSpeed(0);
